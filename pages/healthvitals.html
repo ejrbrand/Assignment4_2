@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <style>
+        /* Add a black background color to the top navigation */
+        .topnav {
+            background-color: #002e63;
+            overflow: hidden;
+            justify-content: right;
+            width: 42%;
+            margin-bottom: 50px;
+        }
+
+        /* Style the links inside the navigation bar */
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* Change the color of links on hover */
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Add a color to the active/current link */
+        .topnav a.active {
+            background-color: #4997d0;
+            color: white;
+        }
+
+        .topnav-right {
+            float: right;
+        }
+
+        .nav-label {
+            color: white;
+            text-align: center;
+            float: left;
+            font-size: 17px;
+            margin-left: 15px;
+            margin-top: 15px;
+        }
+
+        form {
+            margin-left: 25px;
+        }
+
+        label {
+            display: inline-block;
+            text-align: right;
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        .vl {
+            border-left: 4px solid  rgb(73,151,208);
+            height: 325px;
+            margin-right: 20px;
+        }
+        .saveButton {
+            background-color:  #228b22;
+            color: white;
+            padding: 20px;
+            width: 10%;
+            margin-left: 190px;
+        }
+
+        input {
+            margin-right: 25px;
+            padding-right: 50px;
+        }
+        .medications {
+            display: block;
+            width: 275px;
+            height: 100px;
+            margin-bottom: 30px;
+        }
+        
+        .notes {
+            display: block;
+            width: 275px;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topnav">
+        <label2 class="nav-label">Health Camp SPA</label2>
+        <div class="topnav-right">
+            <a href="SPA-1.html">Demographics</a>
+            <a class="active" href="#healthVitals">Health Vitals</a>
+            <a href="reports.html">Reports</a>
+        </div>
+        
+
+    </div>
+    <form action = "http://localhost:3000/vitals" method="POST" id="patientInfo">
+        <table>
+            <tr>
+                <td>
+                    <label for="height">Height: </label><input type="text" id="height"
+                        name="height"><br><br>
+                    <label for="weight">Weight: </label><input type="text" id="weight" name="weight"><br><br>
+                    <label for="bodyTemp">Body Temperature: </label><input type="text" id="bodyTemp" name="bodyTemp"><br><br>
+                    <label for="pulseRate">Pulse Rate: </label><input type="text" id="pulseRate" name="pulseRate"><br><br>
+                    <label for="BP">BP: </label><input type="text" id="BP"
+                        name="notes"><br><br>
+                    
+                </td>
+                <td>
+                    <div class="vl"></div>
+                </td>
+                <td>
+                    <label2 style="margin-bottom: 10px;">Medications: </label2><br>
+                    <textarea id="medications" class="medications"></textarea>
+
+                    <label2>Notes:</label2>
+                    <textarea id="notes" class="notes"></textarea>
+                </td>
+            </tr>
+            
+        </table>
+    </form>
+    <input type="button" ; id="submit" ; type="submit"; class="saveButton"
+        value="Save"></input>
+    <script>
+        document.getElementById("submit").onclick = handleButtonPress;
+
+        var httpRequest;
+        function handleButtonPress(e) {
+            var form = document.getElementById("patientInfo");
+            var formData = new Object();
+            var inputElements = document.getElementsByTagName("input");
+            for (var i = 0; i < inputElements.length; i++) {
+                formData[inputElements[i].name] = inputElements[i].value;
+            }
+            formData['medications'] = document.getElementById('medications').value;
+            formData['notes'] = document.getElementById('notes').value;
+            console.log(JSON.stringify(formData));
+
+            httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = handleResponse;
+            httpRequest.open("POST", form.action);
+            httpRequest.setRequestHeader("Content-Type", "application/json");
+            httpRequest.send(JSON.stringify(formData));
+            console.log(formData);
+        }
+        function handleResponse() {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                document.getElementById("firstName").innerHTML = httpRequest.responseText;
+                document.getElementById("lastName").innerHTML = httpRequest.responseText;
+                console.log(document.getElementById("firstName").value);
+                location.href= 'reports.html'
+            }
+        }
+
+    </script>
+</body>
+
+</html>
